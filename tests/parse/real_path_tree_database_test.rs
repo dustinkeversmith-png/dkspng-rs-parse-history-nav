@@ -4,13 +4,12 @@ use macro_os_engines::database::{
 use macro_os_engines::parse::MacroPipeline;
 use macro_os_engines::test_logging::{
     DatabaseTableLog, ParseCommandLogRecord, ParseFileLogRecord, SearchLogRecord,
-    WalkEfficacySummary, WalkLogRecord,
+    TestOutputBuilder, TestOutputWriter, TestRunInfo, WalkEfficacySummary, WalkLogRecord,
 };
 use macro_os_engines::walk::{TreeWalker, TreeWalkerConfig};
 use serde_json::json;
 use std::collections::BTreeSet;
 use std::fs;
-use std::path::PathBuf;
 use std::time::{SystemTime, UNIX_EPOCH};
 use tempfile::tempdir;
 
@@ -18,10 +17,7 @@ use tempfile::tempdir;
 fn logged_real_path_walk_macropipeline_database_efficacy() {
     let root = "C:\\Users\\Cutie Magic 500\\Desktop\\desktop_temp_docs";
 
-    let log_dir =
-        "C:\\Users\\Cutie Magic 500\\Desktop\\desktop_temp_docs\\log";
-
-    fs::create_dir_all(&log_dir).expect("log dir should be created");
+    let log_dir = "C:\\Users\\Cutie Magic 500\\Desktop\\desktop_temp_docs\\log";
 
     let walker = TreeWalker::new(
         TreeWalkerConfig::new(&root)
@@ -121,8 +117,9 @@ fn logged_real_path_walk_macropipeline_database_efficacy() {
         }
     }
 
+    let dump_limit = inserted_ids.len().max(100);
     let table_dumps = db
-        .dump_core_tables(100)
+        .dump_core_tables(dump_limit)
         .expect("database table dumps should work");
 
     let table_logs: Vec<DatabaseTableLog> = table_dumps
@@ -165,47 +162,48 @@ fn logged_real_path_walk_macropipeline_database_efficacy() {
         },
     ];
 
-    let log = json!({
-        "run": {
-            "test_name": "logged_real_path_walk_macropipeline_database_efficacy",
-            "started_at_unix_ms": now_unix_ms(),
-            "root_path": root,
-            "temporary_sqlite_db_path": db_path,
-        },
-        "walk": {
-            "summary": walk_summary,
-            "files": walk_records,
-        },
-        "parse": {
-            "files": parse_file_records,
-            "commands": parse_command_records,
-        },
-        "database": {
-            "stats": stats,
-            "tables": table_logs,
-        },
-        "searches": search_records,
+    let mut output = TestOutputBuilder::new(TestRunInfo {
+        run_ref: String::new(),
+        test_name: "logged_real_path_walk_macropipeline_database_efficacy".to_string(),
+        started_at_unix_ms: now_unix_ms(),
+        root_path: Some(root.into()),
+        temporary_sqlite_db_path: Some(db_path.clone()),
+        log_kind: "real_path_walk_parse_database_efficacy".to_string(),
     });
 
-    let log_path = PathBuf::from(&log_dir).join(format!(
-        "logged_real_path_walk_macropipeline_database_efficacy_{}.json",
-        now_unix_ms()
-    ));
+    output.add_walk_summary(walk_summary);
+    output.add_walk_records(walk_records);
+    output.add_parse_file_records(parse_file_records);
+    output.add_parse_command_records(parse_command_records);
+    output.add_inserted_command_count(inserted_ids.len());
+    output.add_database_stats(stats);
+    output.add_database_tables(table_logs);
+    output.add_search_records(search_records);
 
-    fs::write(
-        &log_path,
-        serde_json::to_string_pretty(&log).expect("log should serialize"),
+    let document = output.build();
+
+    let writer = TestOutputWriter::new(
+        log_dir,
+        "logged_real_path_walk_macropipeline_database_efficacy",
     )
-    .expect("log should write");
+    .expect("output writer should initialize");
+
+    let log_path = writer
+        .write_json(&document)
+        .expect("test output should write");
 
     println!("test log written to: {}", log_path.display());
     println!("temporary sqlite db path: {}", db_path.display());
-    println!("walked files: {}", walked.files.len());
-    println!("pipeline parsed commands: {}", inserted_ids.len());
-    println!("inserted commands: {}", inserted_ids.len());
-    println!("database stats: {stats:#?}");
+    println!("walked files: {}", document.summary.file_count);
+    println!("pipeline parsed commands: {}", document.summary.parsed_command_count);
+    println!("inserted commands: {}", document.summary.inserted_command_count);
+    println!("database stats: {:#?}", document.sections.database.stats);
+    println!("diagnostics: {}", document.summary.diagnostic_count);
 
-    assert_eq!(stats.command_count, inserted_ids.len() as i64);
+    assert_eq!(
+        document.sections.database.stats.command_count,
+        inserted_ids.len() as i64
+    );
 }
 
 fn now_unix_ms() -> u128 {

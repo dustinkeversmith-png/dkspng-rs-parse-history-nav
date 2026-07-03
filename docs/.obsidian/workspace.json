@@ -4,41 +4,24 @@
     "type": "split",
     "children": [
       {
-        "id": "a6d832ef76e7dafb",
+        "id": "c17d19d83d0ec68b",
         "type": "tabs",
         "children": [
           {
-            "id": "f2573ab99feef244",
-            "type": "leaf",
-            "pinned": true,
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Todo.md",
-                "mode": "source",
-                "source": false
-              },
-              "pinned": true,
-              "icon": "lucide-file",
-              "title": "Todo"
-            }
-          },
-          {
-            "id": "8147af783f03b44e",
+            "id": "b9ef7f2aacec85e7",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Missions/m_1/LOG_EXPANSION.md",
+                "file": "Missions/m_1/m_1.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "LOG_EXPANSION"
+              "title": "m_1"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -111,7 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Missions/m_1/LOG_EXPANSION.md",
+                "file": "Missions/m_1/m_1.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -121,7 +104,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for LOG_EXPANSION"
+              "title": "Backlinks for m_1"
             }
           },
           {
@@ -198,10 +181,12 @@
       "bases:Create new base": false
     }
   },
-  "active": "8147af783f03b44e",
+  "active": "b9ef7f2aacec85e7",
   "lastOpenFiles": [
-    "Missions/m_1/m_1.md",
     "Missions/m_1/LOG_EXPANSION.md",
+    "COMPOSER/CROSS_REFERENCE_LOG.md",
+    "COMPOSER",
+    "Missions/m_1/m_1.md",
     "DATABASE_SETUP.md",
     "NAVIGATION_ARCHITECTURE.md",
     "Missions/m_1",
