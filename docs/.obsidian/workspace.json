@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "COMPOSER/MACRO_PROCESSING_INLINE_UPDATE.md",
+                "file": "Missions/m_1/m_1.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "MACRO_PROCESSING_INLINE_UPDATE"
+              "title": "m_1"
             }
           }
         ]
@@ -183,6 +183,7 @@
   },
   "active": "b9ef7f2aacec85e7",
   "lastOpenFiles": [
+    "COMPOSER/MACRO_PROCESSING_INLINE_UPDATE.md",
     "SOURCE_REFERENCE_FORMAT.md",
     "COMPOSER/CHANGES_4.md",
     "COMPOSER/CHANGES_DOCS.md",
@@ -191,7 +192,6 @@
     "COMPOSER/CHNAGES_4.md",
     "COMPOSER/CHANGES_NOTES.md",
     "TEST_FIXTURE_COVERAGE.md",
-    "COMPOSER/MACRO_PROCESSING_INLINE_UPDATE.md",
     "COMPOSER/CHANGES_3.md",
     "COMPOSER/CHANGES_2.md",
     "COMPOSER/CHANGES_1.md",
